@@ -81,7 +81,8 @@ class Manager(Gtk.Application):
         self.window.set_title("PIA")
         self.window.set_icon_name("pia-manager")
 
-        self.builder.get_object("link_forgot_password").set_markup("<a href='#'>%s</a>" % self.builder.get_object("link_forgot_password").get_text())
+        for linkname in ('link_forgot_password', 'link_get_account', 'link_pia_help'):
+            self.builder.get_object(linkname).set_markup("<a href='#'>%s</a>" % self.builder.get_object(linkname).get_text())
 
         (username, password, self.gateway_value) = self.read_configuration()
         self.username.set_text(username)
@@ -101,6 +102,8 @@ class Manager(Gtk.Application):
         self.builder.get_object("entry_password").connect("icon-press", self.on_entry_icon_pressed)
         self.builder.get_object("button_cancel").connect("clicked", self.on_quit)
         self.builder.get_object("link_forgot_password").connect("activate-link", self.on_forgot_password_clicked)
+        self.builder.get_object("link_get_account").connect("activate-link", self.on_get_account_clicked)
+        self.builder.get_object("link_pia_help").connect("activate-link", self.on_pia_help_clicked)
         self.builder.get_object("button_refresh").connect("clicked", self.on_button_refresh_clicked)
         self.username.connect("changed", self.check_entries)
         self.password.connect("changed", self.check_entries)
@@ -180,6 +183,14 @@ class Manager(Gtk.Application):
 
     def on_forgot_password_clicked(self, label, uri):
         subprocess.Popen(["su", "-c", "xdg-open https://www.privateinternetaccess.com/pages/reset-password.html", self.linux_username])
+        return True
+
+    def on_get_account_clicked(self, label, uri):
+        subprocess.Popen(["su", "-c", "xdg-open https://www.privateinternetaccess.com/pages/buy-vpn/", self.linux_username])
+        return True
+
+    def on_pia_help_clicked(self, label, uri):
+        subprocess.Popen(["su", "-c", "xdg-open https://helpdesk.privateinternetaccess.com/", self.linux_username])
         return True
 
     def on_combo_changed(self, combo):
